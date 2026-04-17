@@ -70,9 +70,15 @@ spl_autoload_register(function (string $class): void {
 AuthService::init(Config::get('JWT_SECRET', 'dev-secret'));
 HubSpotService::init(Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''));
 
-// CORS
-$origin = Config::get('FRONTEND_URL', 'http://localhost:3000');
-header("Access-Control-Allow-Origin: $origin");
+// CORS — allow same origin (browser requests from the same domain)
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigin = Config::get('FRONTEND_URL', '');
+if ($allowedOrigin === '' && $requestOrigin !== '') {
+    $allowedOrigin = $requestOrigin;
+} elseif ($allowedOrigin === '') {
+    $allowedOrigin = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+}
+header("Access-Control-Allow-Origin: $allowedOrigin");
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
