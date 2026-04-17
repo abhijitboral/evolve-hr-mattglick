@@ -31,6 +31,7 @@ if (loginForm) {
       var response = await fetch(API_URL + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       });
 
@@ -71,6 +72,7 @@ if (registerForm) {
       var response = await fetch(API_URL + '/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password, firstName, lastName, company, phone })
       });
 
@@ -111,6 +113,7 @@ if (contactForm) {
       var response = await fetch(API_URL + '/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name, email, phone, company, subject, message })
       });
 

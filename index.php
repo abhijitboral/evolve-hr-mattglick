@@ -43,8 +43,8 @@ Config::load(BASE_PATH . '/.env');
 session_set_cookie_params([
     'lifetime' => 0,
     'httponly' => true,
-    'samesite' => 'Strict',
-    'secure'   => Config::isProduction(),
+    'samesite' => 'Lax',
+    'secure'   => false,
 ]);
 session_start();
 

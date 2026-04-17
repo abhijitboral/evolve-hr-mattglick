@@ -30,7 +30,7 @@ async function initDashboard() {
   document.getElementById('profile-email').textContent = user.email;
 
   try {
-    var res = await fetch(API_URL + '/api/auth/profile', { headers: getAuthHeader() });
+    var res = await fetch(API_URL + '/api/auth/profile', { headers: getAuthHeader(), credentials: 'include' });
     if (res.ok) {
       var data = await res.json();
       if (data.user && data.user.name) {
@@ -58,7 +58,7 @@ async function loadTickets(silent) {
   }
 
   try {
-    var response = await fetch(API_URL + '/api/tickets', { headers: getAuthHeader() });
+    var response = await fetch(API_URL + '/api/tickets', { headers: getAuthHeader(), credentials: 'include' });
 
     if (!response.ok) throw new Error('Failed to load tickets');
 
@@ -123,7 +123,7 @@ async function viewTicket(ticketId) {
   var content = document.getElementById('ticket-detail-content');
 
   try {
-    var response = await fetch(API_URL + '/api/tickets/' + ticketId, { headers: getAuthHeader() });
+    var response = await fetch(API_URL + '/api/tickets/' + ticketId, { headers: getAuthHeader(), credentials: 'include' });
 
     if (!response.ok) throw new Error('Failed to load ticket');
 
@@ -196,6 +196,7 @@ function setupFormHandlers() {
       var response = await fetch(API_URL + '/api/tickets', {
         method: 'POST',
         headers: getAuthHeader(),
+        credentials: 'include',
         body: JSON.stringify({ subject, description, priority })
       });
 
