@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Contact Us — EVOLVE HR</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+  <!-- HEADER -->
+  <header id="header">
+    <h1><a href="index.html">EVOLVE</a></h1>
+    <nav id="nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Evolve</a></li>
+        <li><a href="staffing.html">Staffing</a></li>
+        <li><a href="consulting.html">HR Consulting</a></li>
+        <li><a href="management.html">Management</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li class="special">
+          <a href="#menu" class="menuToggle"><span>Menu</span></a>
+          <div id="menu">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About Evolve</a></li>
+              <li><a href="staffing.html">Staffing</a></li>
+              <li><a href="consulting.html">HR Consulting</a></li>
+              <li><a href="management.html">Management</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+              <li class="menu-separator"><a href="#" onclick="goToAuth(); return false;" id="nav-login-btn-mobile">Log In</a></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="#" class="button primary small" onclick="goToAuth(); return false;" id="nav-login-btn">Log In</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- PAGE BANNER -->
+  <div class="page-banner">
+    <h1>Contact Us</h1>
+    <p>Tell us about your HR challenge and we'll get back to you within one business day.<br />No obligation, no hard sell — just honest, expert advice.</p>
+  </div>
+
+  <!-- CONTACT FORM + INFO -->
+  <section class="wrapper style-white">
+    <div class="inner" style="max-width:1000px;">
+      <div style="display:flex;flex-wrap:wrap;gap:4em;align-items:flex-start;">
+
+        <!-- Form -->
+        <div style="flex:2;min-width:280px;">
+          <header class="major" style="margin-bottom:2em;">
+            <h2>Send Us a Message</h2>
+            <p>Fill out the form below and one of our HR specialists will be in touch shortly.</p>
+          </header>
+
+          <form id="contact-form" class="contact-form" method="post">
+            <div class="fields">
+              <div class="field half">
+                <label for="contact-name">Name <span style="color:#e94560;">*</span></label>
+                <input type="text" name="name" id="contact-name" placeholder="Jane Smith" required />
+              </div>
+              <div class="field half">
+                <label for="contact-email">Email <span style="color:#e94560;">*</span></label>
+                <input type="email" name="email" id="contact-email" placeholder="jane@company.com" required />
+              </div>
+              <div class="field half">
+                <label for="contact-phone">Phone <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:0.85em;">(optional)</span></label>
+                <input type="tel" name="phone" id="contact-phone" placeholder="+1 555 000 0000" />
+              </div>
+              <div class="field half">
+                <label for="contact-company">Company <span style="color:#e94560;">*</span></label>
+                <input type="text" name="company" id="contact-company" placeholder="Acme Corp" required />
+              </div>
+              <div class="field">
+                <label for="contact-subject">Subject <span style="color:#e94560;">*</span></label>
+                <input type="text" name="subject" id="contact-subject" placeholder="How can we help?" required />
+              </div>
+              <div class="field">
+                <label for="contact-message">Message <span style="color:#e94560;">*</span></label>
+                <textarea name="message" id="contact-message" rows="7" placeholder="Tell us more about your HR needs…" required></textarea>
+              </div>
+            </div>
+
+            <div id="contact-message-div" style="display:none;margin-top:1.5em;padding:1.25em 1.5em;border-radius:4px;font-weight:600;font-size:0.95rem;"></div>
+
+            <ul class="actions special" style="margin-top:2em;justify-content:flex-start;">
+              <li><input type="submit" value="Send Message" class="primary" /></li>
+              <li><input type="reset" value="Clear" /></li>
+            </ul>
+          </form>
+        </div>
+
+        <!-- Contact info sidebar -->
+        <div style="flex:1;min-width:220px;">
+          <header class="major" style="margin-bottom:2em;">
+            <h2>Get in Touch</h2>
+          </header>
+
+          <div style="margin-bottom:2em;">
+            <div style="display:flex;align-items:flex-start;gap:1em;margin-bottom:1.5em;">
+              <div style="flex-shrink:0;width:2.5em;height:2.5em;background:#21b2a6;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;">
+                <i class="fa fa-envelope"></i>
+              </div>
+              <div>
+                <strong style="display:block;color:#1a1a2e;margin-bottom:0.2em;">Email</strong>
+                <a href="mailto:contact@evolvehrteam.com" style="color:#21b2a6;">contact@evolvehrteam.com</a>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:1em;margin-bottom:1.5em;">
+              <div style="flex-shrink:0;width:2.5em;height:2.5em;background:#e94560;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;">
+                <i class="fa fa-clock"></i>
+              </div>
+              <div>
+                <strong style="display:block;color:#1a1a2e;margin-bottom:0.2em;">Response Time</strong>
+                <span style="color:#555;">Within one business day</span>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:1em;margin-bottom:1.5em;">
+              <div style="flex-shrink:0;width:2.5em;height:2.5em;background:#8e7cc3;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;">
+                <i class="fa fa-calendar-check"></i>
+              </div>
+              <div>
+                <strong style="display:block;color:#1a1a2e;margin-bottom:0.2em;">Office Hours</strong>
+                <span style="color:#555;">Monday – Friday<br />9:00 AM – 6:00 PM EST</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#f5f5f5;padding:1.5em;border-radius:8px;border-left:4px solid #21b2a6;">
+            <strong style="display:block;color:#1a1a2e;margin-bottom:0.5em;">Existing Client?</strong>
+            <p style="color:#555;margin:0 0 1em;font-size:0.9rem;">Log in to your portal to submit a support ticket and track its progress.</p>
+            <a href="#" class="button small primary" onclick="goToAuth(); return false;">Client Portal</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA STRIP -->
+  <section class="cta-band">
+    <h2>Not Sure Where to Start?</h2>
+    <p>Our team will listen first — then recommend the services that make sense for your business.</p>
+    <a href="about.html" class="button primary large">Learn About EVOLVE</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <ul class="icons">
+      <li><a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+      <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+      <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+      <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+      <li><a href="mailto:contact@evolvehrteam.com" aria-label="Email"><i class="fas fa-envelope"></i></a></li>
+    </ul>
+    <ul class="copyright">
+      <li>&copy; 2025 EVOLVE HR</li>
+      <li>contact@evolvehrteam.com</li>
+    </ul>
+  </footer>
+
+</div><!-- /page-wrapper -->
+
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
