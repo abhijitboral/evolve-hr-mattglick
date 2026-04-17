@@ -1,0 +1,13 @@
+Options -Indexes
+RewriteEngine On
+
+# Allow direct access to real files (css, js, images, etc.)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Allow direct access to real directories
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route everything else through index.php
+RewriteRule ^ index.php [L]
