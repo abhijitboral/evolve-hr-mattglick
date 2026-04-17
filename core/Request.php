@@ -71,15 +71,35 @@ class Request
         if (isset($_SERVER[$key])) {
             return $_SERVER[$key];
         }
+
         if ($name === 'Authorization') {
-            if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-                return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+            // Apache mod_rewrite / CGI fallbacks — header may land under various keys
+            foreach ([
+                'REDIRECT_HTTP_AUTHORIZATION',
+                'HTTP_AUTHORIZATION',
+                'REDIRECT_Authorization',
+            ] as $k) {
+                if (!empty($_SERVER[$k])) {
+                    return $_SERVER[$k];
+                }
             }
+
+            // getallheaders() works on Apache module and some FastCGI setups
+            if (function_exists('getallheaders')) {
+                $all = getallheaders();
+                if (!empty($all['Authorization'])) {
+                    return $all['Authorization'];
+                }
+            }
+
             if (function_exists('apache_request_headers')) {
-                $headers = apache_request_headers();
-                return $headers['Authorization'] ?? null;
+                $all = apache_request_headers();
+                if (!empty($all['Authorization'])) {
+                    return $all['Authorization'];
+                }
             }
         }
+
         return null;
     }
 }
