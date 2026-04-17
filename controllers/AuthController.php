@@ -40,8 +40,15 @@ class AuthController
             'name'      => $name,
         ];
 
-        $token           = AuthService::generateToken($user);
+        $token            = AuthService::generateToken($user);
         $_SESSION['user'] = $user;
+        setcookie('auth_token', $token, [
+            'expires'  => time() + 604800,
+            'path'     => '/',
+            'httponly' => false,
+            'samesite' => 'Lax',
+            'secure'   => false,
+        ]);
 
         $res->json(['success' => true, 'token' => $token, 'user' => $user]);
     }
@@ -86,6 +93,13 @@ class AuthController
 
         $token            = AuthService::generateToken($user);
         $_SESSION['user'] = $user;
+        setcookie('auth_token', $token, [
+            'expires'  => time() + 604800,
+            'path'     => '/',
+            'httponly' => false,
+            'samesite' => 'Lax',
+            'secure'   => false,
+        ]);
 
         $res->status(201)->json([
             'success'   => true,
@@ -131,6 +145,7 @@ class AuthController
     public static function logout(Request $req, Response $res): void
     {
         session_destroy();
+        setcookie('auth_token', '', ['expires' => time() - 3600, 'path' => '/', 'samesite' => 'Lax']);
         $res->json(['success' => true, 'message' => 'Logged out successfully']);
     }
 

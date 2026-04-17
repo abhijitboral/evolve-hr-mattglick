@@ -22,6 +22,11 @@ class AuthMiddleware
             }
         }
 
+        // 3. Fallback: auth_token cookie set by server on login (bypasses Apache header stripping)
+        if (!$token && !empty($_COOKIE['auth_token'])) {
+            $token = $_COOKIE['auth_token'];
+        }
+
         if ($token) {
             $decoded = AuthService::verifyToken($token);
             if ($decoded) {
