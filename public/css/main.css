@@ -748,3 +748,13 @@ ul.actions.stacked li .button { width: 100%; text-align: center; }
   .feature-row { flex-direction: column !important; gap: 1.5em; }
   .feature-row .feature-icon { width: 60px; height: 60px; font-size: 1.5rem; flex: 0 0 60px; }
 }
+
+/* ── Notification toast animations ────────────────────────── */
+@keyframes notifySlideIn {
+  from { opacity: 0; transform: translateX(110%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes notifySlideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}

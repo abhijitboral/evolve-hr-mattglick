@@ -138,16 +138,18 @@ function showNotification(message, type) {
   notification.className = 'notification notification-' + type;
   notification.textContent = message;
   notification.style.cssText = [
-    'position:fixed', 'top:20px', 'right:20px', 'padding:15px 20px',
+    'position:fixed', 'top:24px', 'right:24px', 'padding:16px 24px',
     'background:' + (type === 'success' ? '#4caf50' : '#f44336'),
-    'color:white', 'border-radius:4px', 'z-index:3000',
-    'animation:slideIn 0.3s ease-out'
+    'color:white', 'border-radius:6px', 'z-index:99999',
+    'font-size:15px', 'font-weight:600', 'max-width:360px',
+    'box-shadow:0 4px 20px rgba(0,0,0,0.35)',
+    'animation:notifySlideIn 0.3s ease-out'
   ].join(';');
 
   document.body.appendChild(notification);
 
   setTimeout(function () {
-    notification.style.animation = 'slideOut 0.3s ease-out';
+    notification.style.animation = 'notifySlideOut 0.3s ease-out';
     setTimeout(function () { notification.remove(); }, 300);
   }, 3000);
 }
