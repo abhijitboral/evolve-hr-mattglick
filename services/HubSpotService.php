@@ -107,36 +107,37 @@ class HubSpotService
         ];
 
         // Primary: v3 associations
-        $assocResponse = self::request('GET', "/crm/v3/objects/contacts/{$contactId}/associations/tickets");
-        if ($assocResponse !== null) {
-            $associations = $assocResponse['results'] ?? [];
+        try {
+            $assocResponse = self::request('GET', "/crm/v3/objects/contacts/{$contactId}/associations/tickets");
+            $associations  = $assocResponse['results'] ?? [];
             if (count($associations) > 0) {
-                $ids          = array_map(fn($a) => ['id' => (string) $a['id']], $associations);
+                $ids           = array_map(fn($a) => ['id' => (string) $a['id']], $associations);
                 $batchResponse = self::request('POST', '/crm/v3/objects/tickets/batch/read', [
                     'inputs'     => $ids,
                     'properties' => $ticketProperties,
                 ]);
-                if ($batchResponse !== null) {
-                    return $batchResponse['results'] ?? [];
-                }
+                return $batchResponse['results'] ?? [];
             }
+        } catch (RuntimeException $e) {
+            // Contact has no associations yet or HubSpot returned an error — treat as empty
         }
 
         // Fallback: contact_id_link search
-        $searchResponse = self::request('POST', '/crm/v3/objects/tickets/search', [
-            'filterGroups' => [[
-                'filters' => [[
-                    'propertyName' => 'contact_id_link',
-                    'operator'     => 'EQ',
-                    'value'        => $contactId,
-                ]]
-            ]],
-            'limit'      => 100,
-            'properties' => $ticketProperties,
-        ]);
-
-        if ($searchResponse !== null) {
+        try {
+            $searchResponse = self::request('POST', '/crm/v3/objects/tickets/search', [
+                'filterGroups' => [[
+                    'filters' => [[
+                        'propertyName' => 'contact_id_link',
+                        'operator'     => 'EQ',
+                        'value'        => $contactId,
+                    ]]
+                ]],
+                'limit'      => 100,
+                'properties' => $ticketProperties,
+            ]);
             return $searchResponse['results'] ?? [];
+        } catch (RuntimeException $e) {
+            // No tickets found via search either
         }
 
         return [];
