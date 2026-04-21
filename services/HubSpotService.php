@@ -28,7 +28,7 @@ class HubSpotService
                 ]]
             ]],
             'limit'      => 1,
-            'properties' => ['email', 'firstname', 'lastname', 'phone', 'company'],
+            'properties' => ['email', 'firstname', 'lastname', 'phone', 'company', 'evolve_password_hash'],
         ]);
 
         if ($response === null) {
@@ -57,17 +57,22 @@ class HubSpotService
         string $firstName,
         string $lastName,
         string $phone = '',
-        string $company = ''
+        string $company = '',
+        string $passwordHash = ''
     ): array {
         $email    = strtolower($email);
+        $props    = [
+            'email'     => $email,
+            'firstname' => $firstName,
+            'lastname'  => $lastName,
+            'phone'     => $phone,
+            'company'   => $company,
+        ];
+        if ($passwordHash !== '') {
+            $props['evolve_password_hash'] = $passwordHash;
+        }
         $response = self::request('POST', '/crm/v3/objects/contacts', [
-            'properties' => [
-                'email'     => $email,
-                'firstname' => $firstName,
-                'lastname'  => $lastName,
-                'phone'     => $phone,
-                'company'   => $company,
-            ],
+            'properties' => $props,
         ]);
 
         if ($response === null) {

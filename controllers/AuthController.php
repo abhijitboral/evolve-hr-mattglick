@@ -28,10 +28,10 @@ class AuthController
             $res->status(401)->json(['error' => 'Invalid credentials']);
         }
 
-        // In production, verify password hash stored in HubSpot custom field:
-        // if (!AuthService::comparePassword($password, $contact['properties']['hs_password_hash'] ?? '')) {
-        //     $res->status(401)->json(['error' => 'Invalid credentials']);
-        // }
+        $storedHash = $contact['properties']['evolve_password_hash'] ?? '';
+        if (!$storedHash || !AuthService::comparePassword($password, $storedHash)) {
+            $res->status(401)->json(['error' => 'Invalid credentials']);
+        }
 
         $name  = trim(($contact['properties']['firstname'] ?? '') . ' ' . ($contact['properties']['lastname'] ?? ''));
         $user  = [
@@ -79,8 +79,10 @@ class AuthController
             $res->status(409)->json(['error' => 'Email already registered']);
         }
 
+        $passwordHash = AuthService::hashPassword($password);
+
         try {
-            $newContact = HubSpotService::createContact($email, $firstName, $lastName, $phone, $company);
+            $newContact = HubSpotService::createContact($email, $firstName, $lastName, $phone, $company, $passwordHash);
         } catch (RuntimeException $e) {
             $res->status(400)->json(['error' => 'Failed to create account. Please check your information and try again.']);
         }
