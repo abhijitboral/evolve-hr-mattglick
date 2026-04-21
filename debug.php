@@ -1,24 +1,51 @@
 <?php
-session_start();
+declare(strict_types=1);
+ini_set('display_errors', '0');
+
+define('BASE_PATH', __DIR__);
+require BASE_PATH . '/config/Config.php';
+Config::load(BASE_PATH . '/.env');
+
+spl_autoload_register(function (string $class): void {
+    foreach ([BASE_PATH . '/services/', BASE_PATH . '/config/'] as $dir) {
+        $f = $dir . $class . '.php';
+        if (file_exists($f)) { require_once $f; return; }
+    }
+});
+
+HubSpotService::init(Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''));
 
 header('Content-Type: application/json');
 
-// Collect all Authorization-related keys from $_SERVER
-$authKeys = [];
-foreach ($_SERVER as $k => $v) {
-    if (stripos($k, 'auth') !== false || stripos($k, 'authorization') !== false) {
-        $authKeys[$k] = $v;
-    }
+$email = $_GET['email'] ?? '';
+if (!$email) {
+    echo json_encode(['error' => 'Pass ?email=you@example.com']);
+    exit;
 }
 
-echo json_encode([
-    'session_id'      => session_id(),
-    'session_user'    => $_SESSION['user'] ?? null,
-    'auth_server_keys'=> $authKeys,
-    'HTTP_AUTHORIZATION'         => $_SERVER['HTTP_AUTHORIZATION'] ?? 'NOT SET',
-    'REDIRECT_HTTP_AUTHORIZATION'=> $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? 'NOT SET',
-    'getallheaders'   => function_exists('getallheaders') ? (getallheaders() ?: 'empty') : 'function missing',
-    'cookies'         => $_COOKIE,
-    'request_method'  => $_SERVER['REQUEST_METHOD'],
-    'request_uri'     => $_SERVER['REQUEST_URI'],
-], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+try {
+    // Fetch contact with the password hash property
+    $response = (new ReflectionMethod('HubSpotService', 'request'));
+    $response->setAccessible(true);
+
+    // Use public method
+    $contact = HubSpotService::getContactByEmail($email);
+
+    if (!$contact) {
+        echo json_encode(['found' => false, 'email' => $email]);
+        exit;
+    }
+
+    $props = $contact['properties'] ?? [];
+    echo json_encode([
+        'found'                  => true,
+        'id'                     => $contact['id'],
+        'email'                  => $props['email'] ?? null,
+        'firstname'              => $props['firstname'] ?? null,
+        'lastname'               => $props['lastname'] ?? null,
+        'evolve_password_hash'   => isset($props['evolve_password_hash']) ? 'SET (length=' . strlen($props['evolve_password_hash']) . ')' : 'NOT SET',
+        'all_property_keys'      => array_keys($props),
+    ], JSON_PRETTY_PRINT);
+} catch (Throwable $e) {
+    echo json_encode(['error' => $e->getMessage()]);
+}
