@@ -132,6 +132,11 @@ document.addEventListener('click', function (event) {
   if (modal && event.target === modal) closeAuthModal();
 });
 
+// Close auth modal on Escape key
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Escape') closeAuthModal();
+});
+
 function showNotification(message, type) {
   type = type || 'success';
   var notification = document.createElement('div');
