@@ -59,6 +59,27 @@ if ($action === 'pipelines') {
     }
     echo json_encode(['http_code' => $code, 'pipelines' => $out], JSON_PRETTY_PRINT);
 
+} elseif ($action === 'categories') {
+    // Fetch hs_ticket_category property options
+    $ch = curl_init('https://api.hubapi.com/crm/v3/properties/tickets/hs_ticket_category');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''),
+            'Content-Type: application/json',
+        ],
+    ]);
+    $raw  = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $data    = json_decode($raw, true);
+    $options = [];
+    foreach ($data['options'] ?? [] as $opt) {
+        $options[] = ['label' => $opt['label'], 'value' => $opt['value']];
+    }
+    echo json_encode(['http_code' => $code, 'categories' => $options], JSON_PRETTY_PRINT);
+
 } elseif ($action === 'contact' && isset($_GET['email'])) {
     try {
         $contact = HubSpotService::getContactByEmail($_GET['email']);
