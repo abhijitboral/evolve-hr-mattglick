@@ -200,6 +200,58 @@ class HubSpotService
         return $ticketResponse;
     }
 
+    public static function createContactFormTicket(
+        string $name,
+        string $email,
+        string $phone,
+        string $company,
+        string $subject,
+        string $message,
+        string $contactId
+    ): array {
+        $ticketSubject = 'NEW CONTACT: ' . ($subject ?: "Inquiry from $name");
+
+        $content = implode("\n", [
+            '--- NEW CONTACT INQUIRY ---',
+            '',
+            'Name    : ' . $name,
+            'Email   : ' . $email,
+            'Phone   : ' . ($phone   ?: 'Not provided'),
+            'Company : ' . ($company ?: 'Not provided'),
+            '',
+            'Subject : ' . ($subject ?: 'General Inquiry'),
+            '',
+            'Message :',
+            $message,
+            '',
+            '--- Submitted via evolvehrteam.com ---',
+        ]);
+
+        $ticketResponse = self::request('POST', '/crm/v3/objects/tickets', [
+            'properties' => [
+                'subject'            => $ticketSubject,
+                'content'            => $content,
+                'hs_ticket_priority' => 'HIGH',
+                'hs_pipeline_stage'  => '1',
+                'source_type'        => 'WEB',
+            ],
+        ]);
+
+        if ($ticketResponse === null) {
+            throw new RuntimeException('Failed to create contact inquiry ticket');
+        }
+
+        $ticketId = $ticketResponse['id'];
+
+        // Associate ticket ↔ contact
+        self::request(
+            'PUT',
+            "/crm/v3/objects/tickets/{$ticketId}/associations/contacts/{$contactId}/ticket_to_contact"
+        );
+
+        return $ticketResponse;
+    }
+
     public static function updateTicketStatus(string $ticketId, string $status): array
     {
         $response = self::request('PATCH', "/crm/v3/objects/tickets/{$ticketId}", [

@@ -37,11 +37,9 @@ class ContactController
                 }
             }
 
-            $ticketSubject = $subject ?: "New Inquiry from $name";
-            $ticketBody    = "Name: $name\nEmail: $email\nPhone: " . ($phone ?: 'N/A') .
-                             "\nCompany: " . ($company ?: 'N/A') . "\n\nMessage:\n$message";
-
-            $ticket = HubSpotService::createTicket($ticketSubject, $ticketBody, $contact['id'], 'MEDIUM');
+            $ticket = HubSpotService::createContactFormTicket(
+                $name, $email, $phone, $company, $subject, $message, $contact['id']
+            );
 
             $res->status(201)->json([
                 'success'   => true,
