@@ -17,35 +17,49 @@ HubSpotService::init(Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''));
 
 header('Content-Type: application/json');
 
-$email = $_GET['email'] ?? '';
-if (!$email) {
-    echo json_encode(['error' => 'Pass ?email=you@example.com']);
-    exit;
-}
+$action = $_GET['action'] ?? 'pipelines';
 
-try {
-    // Fetch contact with the password hash property
-    $response = (new ReflectionMethod('HubSpotService', 'request'));
-    $response->setAccessible(true);
+if ($action === 'pipelines') {
+    // Fetch all ticket pipelines and their stages
+    $ch = curl_init('https://api.hubapi.com/crm/v3/pipelines/tickets');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''),
+            'Content-Type: application/json',
+        ],
+    ]);
+    $raw  = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
 
-    // Use public method
-    $contact = HubSpotService::getContactByEmail($email);
-
-    if (!$contact) {
-        echo json_encode(['found' => false, 'email' => $email]);
-        exit;
+    $data = json_decode($raw, true);
+    $out  = [];
+    foreach ($data['results'] ?? [] as $pipeline) {
+        $stages = [];
+        foreach ($pipeline['stages'] ?? [] as $stage) {
+            $stages[] = ['id' => $stage['id'], 'label' => $stage['label']];
+        }
+        $out[] = [
+            'pipeline_id'    => $pipeline['id'],
+            'pipeline_label' => $pipeline['label'],
+            'stages'         => $stages,
+        ];
     }
+    echo json_encode(['http_code' => $code, 'pipelines' => $out], JSON_PRETTY_PRINT);
 
-    $props = $contact['properties'] ?? [];
-    echo json_encode([
-        'found'                  => true,
-        'id'                     => $contact['id'],
-        'email'                  => $props['email'] ?? null,
-        'firstname'              => $props['firstname'] ?? null,
-        'lastname'               => $props['lastname'] ?? null,
-        'evolve_password_hash'   => isset($props['evolve_password_hash']) ? 'SET (length=' . strlen($props['evolve_password_hash']) . ')' : 'NOT SET',
-        'all_property_keys'      => array_keys($props),
-    ], JSON_PRETTY_PRINT);
-} catch (Throwable $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+} elseif ($action === 'contact' && isset($_GET['email'])) {
+    try {
+        $contact = HubSpotService::getContactByEmail($_GET['email']);
+        echo json_encode([
+            'found'                => (bool) $contact,
+            'id'                   => $contact['id'] ?? null,
+            'evolve_password_hash' => isset($contact['properties']['evolve_password_hash'])
+                ? 'SET (len=' . strlen($contact['properties']['evolve_password_hash']) . ')'
+                : 'NOT SET',
+            'properties'           => array_keys($contact['properties'] ?? []),
+        ], JSON_PRETTY_PRINT);
+    } catch (Throwable $e) {
+        echo json_encode(['error' => $e->getMessage()]);
+    }
 }

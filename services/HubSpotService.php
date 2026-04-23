@@ -233,7 +233,6 @@ class HubSpotService
                 'content'            => $content,
                 'hs_ticket_priority' => 'HIGH',
                 'hs_pipeline_stage'  => '1',
-                'source_type'        => 'WEB',
             ],
         ]);
 

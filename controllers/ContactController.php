@@ -48,7 +48,7 @@ class ContactController
                 'contactId' => $contact['id'],
             ]);
         } catch (RuntimeException $e) {
-            $res->status(500)->json(['error' => 'Failed to process your inquiry']);
+            $res->status(500)->json(['error' => 'Failed to process your inquiry', 'detail' => $e->getMessage()]);
         }
     }
 }
