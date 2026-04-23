@@ -209,7 +209,7 @@ class HubSpotService
         string $message,
         string $contactId
     ): array {
-        $ticketSubject = 'NEW CONTACT: ' . ($subject ?: "Inquiry from $name");
+        $ticketSubject = $subject ?: "Inquiry from $name";
 
         $content = implode("\n", [
             '--- NEW CONTACT INQUIRY ---',
@@ -229,10 +229,11 @@ class HubSpotService
 
         $ticketResponse = self::request('POST', '/crm/v3/objects/tickets', [
             'properties' => [
-                'subject'            => $ticketSubject,
-                'content'            => $content,
-                'hs_ticket_priority' => 'HIGH',
-                'hs_pipeline_stage'  => '1',
+                'subject'             => $ticketSubject,
+                'content'             => $content,
+                'hs_ticket_priority'  => 'HIGH',
+                'hs_pipeline_stage'   => '1',
+                'hs_ticket_category'  => 'NEW CONTACT',
             ],
         ]);
 

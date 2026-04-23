@@ -19,7 +19,7 @@ header('Content-Type: application/json');
 
 // Token check
 $token = Config::get('HUBSPOT_PRIVATE_APP_TOKEN', '');
-if ($_GET['action'] ?? '' === 'token') {
+if (($_GET['action'] ?? '') === 'token') {
     echo json_encode([
         'env_file_exists' => file_exists(BASE_PATH . '/.env'),
         'token_set'       => !empty($token),
