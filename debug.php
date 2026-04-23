@@ -17,6 +17,17 @@ HubSpotService::init(Config::get('HUBSPOT_PRIVATE_APP_TOKEN', ''));
 
 header('Content-Type: application/json');
 
+// Token check
+$token = Config::get('HUBSPOT_PRIVATE_APP_TOKEN', '');
+if ($_GET['action'] ?? '' === 'token') {
+    echo json_encode([
+        'env_file_exists' => file_exists(BASE_PATH . '/.env'),
+        'token_set'       => !empty($token),
+        'token_preview'   => $token ? substr($token, 0, 8) . '...' : 'EMPTY',
+    ], JSON_PRETTY_PRINT);
+    exit;
+}
+
 $action = $_GET['action'] ?? 'pipelines';
 
 if ($action === 'pipelines') {
