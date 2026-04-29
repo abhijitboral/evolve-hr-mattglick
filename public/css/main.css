@@ -80,8 +80,10 @@ body.landing #page-wrapper { padding-top: 0; }
 #header.alt { background: transparent; box-shadow: none; }
 
 #header h1 { font-size: 1rem; letter-spacing: 0.2em; margin: 0; text-transform: uppercase; }
-#header h1 a { color: #fff; font-weight: 700; }
+#header h1 a { color: #fff; font-weight: 700; display: inline-flex; align-items: center; }
 #header h1 a:hover { color: #21b2a6; }
+#header h1 a img.site-logo { height: 32px; width: auto; display: block; }
+#header h1 a:hover img.site-logo { filter: brightness(0.8) sepia(1) saturate(3) hue-rotate(145deg); }
 
 #nav { margin: 0; }
 #nav > ul {

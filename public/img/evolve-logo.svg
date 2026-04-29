@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 52" role="img" aria-label="EVOLVE">
+  <defs>
+    <style>
+      @keyframes powerPulse {
+        0%, 100% {
+          filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px rgba(255,255,255,.55));
+        }
+        50% {
+          filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 14px rgba(255,255,255,.9)) drop-shadow(0 0 26px rgba(255,255,255,.35));
+        }
+      }
+      .power { animation: powerPulse 1s ease-in-out infinite; }
+    </style>
+  </defs>
+
+  <!-- E V  (invisible-O placeholder keeps natural spacing)  L V E -->
+  <!-- Verdana Bold 44px, baseline y=44, letter-spacing tight -->
+  <text font-family="Verdana,Geneva,sans-serif" font-weight="700"
+        font-size="44" fill="white" y="44" letter-spacing="1">
+    <tspan x="0">EV</tspan>
+    <!-- O is invisible — its advance width still moves the cursor -->
+    <tspan fill="transparent">O</tspan>
+    <tspan>LVE</tspan>
+  </text>
+
+  <!--
+    Verdana Bold 44px metrics (approximate):
+      E advance  ≈ 30px
+      V advance  ≈ 32px
+      O advance  ≈ 34px  → O left edge ≈ 63, center x ≈ 80
+    Cap height  ≈ 73% × 44 = 32px  → center y ≈ 44 − 16 = 28
+    Power-button radius = 16px
+  -->
+  <g class="power" transform="translate(80,27)">
+    <!-- Almost-full circle with ~40° gap at the top for the vertical stem -->
+    <!-- Gap endpoints at ±20° from top (270°):
+         left  (250°): cos=−0.342, sin=−0.940 → (−5.47, −15.04)
+         right (290°): cos= 0.342, sin=−0.940 → ( 5.47, −15.04) -->
+    <path d="M -5.5,-15 A 16,16 0 1,1 5.5,-15"
+          stroke="white" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+    <!-- Vertical stem: starts above the circle, drops to just past centre -->
+    <line x1="0" y1="-19" x2="0" y2="-8"
+          stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+</svg>
