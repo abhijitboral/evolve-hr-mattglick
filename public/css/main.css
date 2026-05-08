@@ -242,9 +242,9 @@ body.landing #page-wrapper {
 
 /* Separator before Log-In item in mobile menu */
 #menu ul li.menu-separator {
-  border-top: 2px solid rgba(255, 255, 255, 0.25);
+  /* border-top: 2px solid rgba(255, 255, 255, 0.25);
   margin-top: 0.5em;
-  padding-top: 0.25em;
+  padding-top: 0.25em; */
 }
 
 .menuToggle {
