@@ -4,7 +4,6 @@
   <title>Compensation Management — EVOLVE HR</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" />
@@ -16,10 +15,7 @@
 
   <!-- HEADER -->
   <header id="header">
-    <h1><a href="index.html">
-            <!-- EVOLVE -->
-            <img src="images/evolvo_glow.gif" alt="EVOLVE Logo" />
-          </a></h1>
+    <h1><a href="index.html">EVOLVE</a></h1>
     <nav id="nav">
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -192,155 +188,12 @@
       <li><a href="mailto:contact@evolvehrteam.com" aria-label="Email"><i class="fas fa-envelope"></i></a></li>
     </ul>
     <ul class="copyright">
-      <li>&copy; <script>document.write(new Date().getFullYear());</script> EVOLVE HR</li>
+      <li>&copy; 2025 EVOLVE HR</li>
       <li>contact@evolvehrteam.com</li>
     </ul>
   </footer>
 
 </div><!-- /page-wrapper -->
-
-<!-- ═══════════════════════════════════════
-     AUTH MODAL
-═══════════════════════════════════════ -->
-    <div id="auth-modal" class="modal-overlay" style="display: none">
-      <div class="modal-box">
-        <button
-          class="modal-close"
-          onclick="closeAuthModal()"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <div id="login-tab" class="auth-tab active">
-          <header class="modal-header">
-            <h2>Welcome Back</h2>
-            <p>Sign in to your EVOLVE HR portal</p>
-          </header>
-          <form id="login-form">
-            <div class="field">
-              <label for="login-email">Email</label>
-              <input
-                type="email"
-                id="login-email"
-                placeholder="you@company.com"
-                required
-              />
-            </div>
-            <div class="field">
-              <label for="login-password">Password</label>
-              <input
-                type="password"
-                id="login-password"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            <ul class="actions">
-              <li><input type="submit" value="Login" class="primary fit" /></li>
-            </ul>
-          </form>
-          <p class="auth-toggle">
-            Need an Evolve account? <a href="contact.html">Let us know!</a>
-          </p>
-        </div>
-
-        <div id="register-tab" class="auth-tab">
-          <header class="modal-header">
-            <h2>Create Account</h2>
-            <p>Join the EVOLVE HR client portal</p>
-          </header>
-          <form id="register-form">
-            <div class="fields">
-              <div class="field half">
-                <label for="register-firstname">First Name</label>
-                <input
-                  type="text"
-                  id="register-firstname"
-                  placeholder="Jane"
-                  required
-                />
-              </div>
-              <div class="field half">
-                <label for="register-lastname">Last Name</label>
-                <input
-                  type="text"
-                  id="register-lastname"
-                  placeholder="Smith"
-                  required
-                />
-              </div>
-            </div>
-            <div class="field">
-              <label for="register-email">Email</label>
-              <input
-                type="email"
-                id="register-email"
-                placeholder="you@company.com"
-                required
-              />
-            </div>
-            <div class="fields">
-              <div class="field half">
-                <label for="register-phone"
-                  >Phone
-                  <span
-                    style="
-                      font-weight: 400;
-                      text-transform: none;
-                      letter-spacing: 0;
-                    "
-                    >(optional)</span
-                  ></label
-                >
-                <input
-                  type="tel"
-                  id="register-phone"
-                  placeholder="+1 555 000 0000"
-                />
-              </div>
-              <div class="field half">
-                <label for="register-company">Company</label>
-                <input
-                  type="text"
-                  id="register-company"
-                  placeholder="Acme Corp"
-                  required
-                />
-              </div>
-            </div>
-            <div class="field">
-              <label for="register-password">Password</label>
-              <input
-                type="password"
-                id="register-password"
-                placeholder="••••••••"
-                required
-              />
-            </div>
-            <ul class="actions">
-              <li>
-                <input
-                  type="submit"
-                  value="Create Account"
-                  class="primary fit"
-                />
-              </li>
-            </ul>
-          </form>
-          <p class="auth-toggle">
-            Already a member?
-            <a
-              href="#"
-              onclick="
-                switchTab('login');
-                return false;
-              "
-              >Login</a
-            >
-          </p>
-        </div>
-      </div>
-    </div>
 
 <script src="js/main.js"></script>
 <script src="js/auth.js"></script>
