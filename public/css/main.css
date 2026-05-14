@@ -424,7 +424,7 @@ a.more.scrolly:hover {
   max-height: 241px;
   z-index: 0;
   background-color: #af870f;
-  mix-blend-mode: color;
+  mix-blend-mode: overlay;
 }
 #banner.hero-fixed #overlay {
   display: none;
@@ -566,7 +566,7 @@ a.more.scrolly:hover {
     max-height: 25vw;
     z-index: 0;
     background-color: #af870f;
-    mix-blend-mode: color;
+    mix-blend-mode: overlay;
     margin: 0 80px;
   }
 }
