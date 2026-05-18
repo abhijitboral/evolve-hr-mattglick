@@ -813,320 +813,275 @@
       }
     </script>
 
-    <script>
+    <!--<script>
       (function () {
-        /* ─────────────────────────────
-     DOM REFS
-  ───────────────────────────── */
+        // DESKTOP ONLY
+        if (window.innerWidth < 1024) return;
+
         const banner = document.querySelector("#banner");
         const inner = document.querySelector("#banner .inner");
+
         const heroTitle = document.querySelector("#banner .hero-title-wrap");
-        const heroButton = document.querySelector("#banner .hero-actions li");
+        const heroSub = document.querySelector("#banner .hero-sub");
+        const heroButton = document.querySelector("#banner .hero-actions");
         const learnMore = document.querySelector("#banner .more");
 
-        /* ─────────────────────────────
-     CONFIG
-  ───────────────────────────── */
-        const CONFIG = {
-          REVERSE_RANGE: 200,
-          TARGET_TOP: 12,
-          TARGET_RIGHT_DESKTOP: 40,
-          TARGET_RIGHT_MOBILE: 15,
-          SCALE_TARGET: 0.35,
-          MOBILE_BREAKPOINT: 768,
-          LOGO_OFFSET: 55,
-          LEARN_OFFSET: 380,
-          LOGO_TOUCH_OFFSET: 5,
-          OPACITY_DELAY: 400,
-          ANIM_DURATION: 650,
-          TRANSITION_ANIM:
-            "transform 0.6s ease-in-out, opacity 0.6s ease-in-out",
-        };
+        /* =========================
+     STORE ORIGINAL POSITIONS
+  ========================= */
 
-        /* ─────────────────────────────
-     STATE
-  ───────────────────────────── */
-        let titleTrigger = 0;
-        let learnMoreTrigger = 0;
-        let triggerScrollY = 0;
-        let isAnimated = false;
-        let isAnimating = false;
-        let opacityTimer = null;
-        let restoreTimer = null;
-        let naturalRect = null;
-        let ticking = false;
+        let titleTrigger;
+        let textTrigger;
+        let buttonTrigger;
+        let learnMoreTrigger;
 
-        /* Style props we save/restore for live measurement */
-        const STYLE_KEYS = [
-          "transition",
-          "position",
-          "top",
-          "left",
-          "width",
-          "height",
-          "margin",
-          "padding",
-          "transform",
-          "opacity",
-          "visibility",
-        ];
-
-        /* ─────────────────────────────
-     HELPERS
-  ───────────────────────────── */
-        const getRect = (el) => {
-          const r = el.getBoundingClientRect();
-          return { top: r.top, left: r.left, width: r.width, height: r.height };
-        };
-
-        const getTargetRight = () =>
-          window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-            ? CONFIG.TARGET_RIGHT_MOBILE
-            : CONFIG.TARGET_RIGHT_DESKTOP;
-
-        const calculateTriggers = () => {
+        function calculateTriggers() {
           titleTrigger =
-            heroTitle.getBoundingClientRect().top +
-            window.scrollY -
-            CONFIG.LOGO_OFFSET;
+            heroTitle.getBoundingClientRect().top + window.scrollY - 55;
+
+          textTrigger =
+            heroSub.getBoundingClientRect().top + window.scrollY - 305;
+
+          buttonTrigger =
+            heroButton.getBoundingClientRect().top + window.scrollY - 350;
+
           learnMoreTrigger =
-            learnMore.getBoundingClientRect().top +
-            window.scrollY -
-            CONFIG.LEARN_OFFSET;
-        };
+            learnMore.getBoundingClientRect().top + window.scrollY - 380;
+        }
 
-        const clearTimers = () => {
-          if (opacityTimer) {
-            clearTimeout(opacityTimer);
-            opacityTimer = null;
-          }
-          if (restoreTimer) {
-            clearTimeout(restoreTimer);
-            restoreTimer = null;
-          }
-        };
-
-        const setStyles = (el, styles) => {
-          for (const key in styles) el.style[key] = styles[key];
-        };
-
-        const storeNaturalRect = () => {
-          if (!isAnimated && !isAnimating) {
-            naturalRect = getRect(heroButton);
-          }
-        };
-
-        /* ─────────────────────────────
-     READ TRUE NATURAL POSITION
-     (temporarily un-fix button)
-  ───────────────────────────── */
-        const getLiveNaturalRect = () => {
-          const saved = {};
-          STYLE_KEYS.forEach((k) => (saved[k] = heroButton.style[k]));
-
-          /* Reset to natural flow (hidden) */
-          STYLE_KEYS.forEach((k) => (heroButton.style[k] = ""));
-          heroButton.style.transition = "none";
-          heroButton.style.visibility = "hidden";
-
-          heroButton.offsetHeight; // force reflow
-
-          const live = getRect(heroButton);
-
-          /* Restore */
-          STYLE_KEYS.forEach((k) => (heroButton.style[k] = saved[k]));
-
-          return live;
-        };
-
-        /* ─────────────────────────────
-     APPLY FIXED FRAME
-     (sets fixed position to a rect)
-  ───────────────────────────── */
-        const applyFixedFrame = (rect) => {
-          setStyles(heroButton, {
-            position: "fixed",
-            top: rect.top + "px",
-            left: rect.left + "px",
-            width: rect.width + "px",
-            height: rect.height + "px",
-            margin: "0",
-            padding: "0",
-            zIndex: "9999",
-          });
-        };
-
-        /* ─────────────────────────────
-     FORWARD ANIMATION
-  ───────────────────────────── */
-        const animateToCorner = () => {
-          if (isAnimated || isAnimating || !naturalRect) return;
-
-          isAnimating = true;
-          triggerScrollY = window.scrollY;
-
-          /* Freeze at natural position */
-          heroButton.style.transition = "none";
-          applyFixedFrame(naturalRect);
-          heroButton.style.opacity = "1";
-          heroButton.style.transformOrigin = "top right";
-          heroButton.style.transform = "translate(0px, 0px) scale(1)";
-
-          heroButton.offsetHeight; // repaint
-
-          /* Calculate destination */
-          const targetLeft =
-            window.innerWidth - getTargetRight() - naturalRect.width;
-          const deltaX = targetLeft - naturalRect.left;
-          const deltaY = CONFIG.TARGET_TOP - naturalRect.top;
-
-          /* Animate */
-          heroButton.style.transition = CONFIG.TRANSITION_ANIM;
-          heroButton.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${CONFIG.SCALE_TARGET})`;
-
-          clearTimers();
-
-          opacityTimer = setTimeout(() => {
-            heroButton.style.opacity = "0";
-            opacityTimer = null;
-          }, CONFIG.OPACITY_DELAY);
-
-          restoreTimer = setTimeout(() => {
-            isAnimated = true;
-            isAnimating = false;
-            restoreTimer = null;
-          }, CONFIG.ANIM_DURATION);
-        };
-
-        /* ─────────────────────────────
-     REVERSE ANIMATION (SCROLL-LINKED)
-  ───────────────────────────── */
-        const animateBackByScroll = (progress) => {
-          progress = Math.max(0, Math.min(1, progress));
-
-          /* ✅ Kill any pending transitions immediately */
-          heroButton.style.transition = "none";
-
-          const live = getLiveNaturalRect();
-          if (!live) return;
-
-          const targetLeft = window.innerWidth - getTargetRight() - live.width;
-          const deltaX = targetLeft - live.left;
-          const deltaY = CONFIG.TARGET_TOP - live.top;
-
-          const inv = 1 - progress;
-          const x = deltaX * inv;
-          const y = deltaY * inv;
-          const scale =
-            CONFIG.SCALE_TARGET + (1 - CONFIG.SCALE_TARGET) * progress;
-
-          applyFixedFrame(live);
-          heroButton.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
-          heroButton.style.opacity = progress;
-
-          if (progress >= 1) restoreNaturalFlow();
-        };
-
-        /* ─────────────────────────────
-     RESTORE NATURAL FLOW
-  ───────────────────────────── */
-        const restoreNaturalFlow = () => {
-          heroButton.style.transition = "none";
-          STYLE_KEYS.forEach((k) => (heroButton.style[k] = ""));
-          heroButton.style.transformOrigin = "";
-
-          heroButton.offsetHeight;
-          heroButton.style.transition = "";
-
-          isAnimated = false;
-          isAnimating = false;
-
-          naturalRect = getRect(heroButton);
-        };
-
-        /* ─────────────────────────────
-     OVERLAY HELPERS
-  ───────────────────────────── */
-        const ensureOverlay = () => {
-          if (!document.querySelector(".banner-overlay")) {
-            const span = document.createElement("span");
-            span.className = "banner-overlay";
-            inner.prepend(span);
-          }
-        };
-
-        const removeOverlay = () => {
-          const ov = document.querySelector(".banner-overlay");
-          if (ov) ov.remove();
-        };
-
-        /* ─────────────────────────────
-     SCROLL HANDLER
-  ───────────────────────────── */
-        const handleScroll = () => {
-          const scrollY = window.scrollY;
-          const logoRect = heroTitle.getBoundingClientRect();
-
-          storeNaturalRect();
-
-          /* Logo sticky */
-          banner.classList.toggle("hero-fixed", scrollY >= titleTrigger);
-
-          /* Forward trigger */
-          if (!isAnimated && !isAnimating) {
-            const buttonRect = heroButton.getBoundingClientRect();
-            if (buttonRect.top <= logoRect.bottom - CONFIG.LOGO_TOUCH_OFFSET) {
-              animateToCorner();
-            }
-          }
-
-          /* ✅ Reverse trigger (works during forward too — fast scroll fix) */
-          if ((isAnimated || isAnimating) && scrollY < triggerScrollY) {
-            clearTimers();
-
-            /* Cancel forward if still animating */
-            if (isAnimating && !isAnimated) {
-              isAnimated = true;
-              isAnimating = false;
-            }
-
-            const progress = (triggerScrollY - scrollY) / CONFIG.REVERSE_RANGE;
-            animateBackByScroll(progress);
-          }
-
-          /* Learn more */
-          banner.classList.toggle(
-            "learn-more-hide",
-            scrollY >= learnMoreTrigger,
-          );
-
-          /* Overlay */
-          scrollY >= titleTrigger ? ensureOverlay() : removeOverlay();
-        };
-
-        /* ─────────────────────────────
-     RAF-THROTTLED SCROLL
-  ───────────────────────────── */
-        const onScroll = () => {
-          if (!ticking) {
-            requestAnimationFrame(() => {
-              handleScroll();
-              ticking = false;
-            });
-            ticking = true;
-          }
-        };
-
-        /* ─────────────────────────────
-     INIT
-  ───────────────────────────── */
+        /* INITIAL CALC */
         calculateTriggers();
+
+        function handleScroll() {
+          const scrollY = window.scrollY;
+
+          /* =========================
+       LOGO STICKY
+    ========================= */
+
+          if (scrollY >= titleTrigger) {
+            banner.classList.add("hero-fixed");
+          } else {
+            banner.classList.remove("hero-fixed");
+          }
+
+          /* =========================
+       HIDE TEXT
+    ========================= */
+
+          if (scrollY >= textTrigger) {
+            banner.classList.add("hide-text");
+          } else {
+            banner.classList.remove("hide-text");
+          }
+
+          /* =========================
+       MOVE BUTTON
+    ========================= */
+
+          if (scrollY >= buttonTrigger) {
+            banner.classList.add("move-btn");
+          } else {
+            banner.classList.remove("move-btn");
+          }
+
+          /* =========================
+       HIDE LEARN MORE
+    ========================= */
+
+          if (scrollY >= learnMoreTrigger) {
+            banner.classList.add("learn-more-hide");
+          } else {
+            banner.classList.remove("learn-more-hide");
+          }
+
+          /* =========================
+       ADD / REMOVE OVERLAY
+    ========================= */
+
+          if (scrollY >= titleTrigger) {
+            if (!document.querySelector(".banner-overlay")) {
+              const span = document.createElement("span");
+
+              span.className = "banner-overlay";
+
+              inner.prepend(span);
+            }
+          } else {
+            const overlay = document.querySelector(".banner-overlay");
+
+            if (overlay) {
+              overlay.remove();
+            }
+          }
+        }
+
+        /* RUN */
         handleScroll();
 
-        window.addEventListener("scroll", onScroll, { passive: true });
+        /* LISTEN */
+        window.addEventListener("scroll", handleScroll);
+
+        /* RECALCULATE ON RESIZE ONLY */
         window.addEventListener("resize", () => {
-          naturalRect = null;
           calculateTriggers();
+
+          handleScroll();
+        });
+      })();
+    </script>-->
+    <script>
+      (function () {
+        const banner = document.querySelector("#banner");
+        const inner = document.querySelector("#banner .inner");
+
+        const heroTitle = document.querySelector("#banner .hero-title-wrap");
+        const heroSub = document.querySelector("#banner .hero-sub");
+        const heroButton = document.querySelector("#banner .hero-actions");
+        const learnMore = document.querySelector("#banner .more");
+
+        /* =========================
+     DESKTOP / MOBILE TRIGGERS
+  ========================= */
+
+        let titleTrigger;
+        let textTrigger;
+        let buttonTrigger;
+        let learnMoreTrigger;
+
+        function calculateTriggers() {
+          /* =========================
+       DESKTOP (KEEPING YOUR LOGIC)
+    ========================= */
+
+          if (window.innerWidth > 1024) {
+            titleTrigger =
+              heroTitle.getBoundingClientRect().top + window.scrollY - 55;
+
+            textTrigger =
+              heroSub.getBoundingClientRect().top + window.scrollY - 305;
+
+            buttonTrigger =
+              heroButton.getBoundingClientRect().top + window.scrollY - 350;
+
+            learnMoreTrigger =
+              learnMore.getBoundingClientRect().top + window.scrollY - 380;
+          } else if (window.innerWidth > 576) {
+            /* =========================
+       TABLET
+    ========================= */
+            /*
+        Using chained triggers instead
+        of independent offsets
+        for responsive consistency
+      */
+
+            titleTrigger =
+              heroTitle.getBoundingClientRect().top + window.scrollY - 55;
+
+            textTrigger = titleTrigger + 20;
+
+            buttonTrigger = textTrigger + 120;
+
+            learnMoreTrigger = buttonTrigger + 140;
+          } else {
+            /* =========================
+       MOBILE
+    ========================= */
+            /*
+        Using chained triggers instead
+        of independent offsets
+        for responsive consistency
+      */
+
+            titleTrigger =
+              heroTitle.getBoundingClientRect().top + window.scrollY - 55;
+
+            textTrigger = titleTrigger + 20;
+
+            buttonTrigger = textTrigger + 130;
+
+            learnMoreTrigger = buttonTrigger + 50;
+          }
+        }
+
+        /* INITIAL CALC */
+        calculateTriggers();
+
+        function handleScroll() {
+          const scrollY = window.scrollY;
+
+          /* =========================
+       LOGO STICKY
+    ========================= */
+
+          if (scrollY >= titleTrigger) {
+            banner.classList.add("hero-fixed");
+          } else {
+            banner.classList.remove("hero-fixed");
+          }
+
+          /* =========================
+       HIDE TEXT
+    ========================= */
+
+          if (scrollY >= textTrigger) {
+            banner.classList.add("hide-text");
+          } else {
+            banner.classList.remove("hide-text");
+          }
+
+          /* =========================
+       MOVE BUTTON
+    ========================= */
+
+          if (scrollY >= buttonTrigger) {
+            banner.classList.add("move-btn");
+          } else {
+            banner.classList.remove("move-btn");
+          }
+
+          /* =========================
+       HIDE LEARN MORE
+    ========================= */
+
+          if (scrollY >= learnMoreTrigger) {
+            banner.classList.add("learn-more-hide");
+          } else {
+            banner.classList.remove("learn-more-hide");
+          }
+
+          /* =========================
+       ADD / REMOVE OVERLAY
+    ========================= */
+
+          if (scrollY >= titleTrigger) {
+            if (!document.querySelector(".banner-overlay")) {
+              const span = document.createElement("span");
+
+              span.className = "banner-overlay";
+
+              inner.prepend(span);
+            }
+          } else {
+            const overlay = document.querySelector(".banner-overlay");
+
+            if (overlay) {
+              overlay.remove();
+            }
+          }
+        }
+
+        /* RUN */
+        handleScroll();
+
+        /* LISTEN */
+        window.addEventListener("scroll", handleScroll);
+
+        /* RECALCULATE ON RESIZE */
+        window.addEventListener("resize", () => {
+          calculateTriggers();
+
           handleScroll();
         });
       })();

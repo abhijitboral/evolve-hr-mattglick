@@ -323,6 +323,7 @@ body.landing #page-wrapper {
   max-width: 750px;
   width: 100%;
   position: relative;
+  isolation: isolate;
   z-index: 2;
 }
 #overlay {
@@ -340,11 +341,11 @@ body.landing #page-wrapper {
 #banner .hero-title a.power-btn {
   position: absolute;
   z-index: 3;
-  top: clamp(15px, 6vw, 55px);
-  left: 46%;
-  width: clamp(50px, 18vw, 160px);
-  height: clamp(50px, 18vw, 160px);
-  background: transparent;
+  top: clamp(15px, 6vw, 50px);
+  left: 50%;
+  width: clamp(50px, 16vw, 150px);
+  height: clamp(50px, 16vw, 150px);
+  background: #ed493300;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -420,7 +421,7 @@ a.more.scrolly:hover {
   width: 100%;
   max-width: 750px;
   height: 100%;
-  max-height: 260px;
+  max-height: 241px;
   z-index: 0;
   background-color: #af870f;
   mix-blend-mode: overlay;
@@ -463,16 +464,10 @@ a.more.scrolly:hover {
   opacity: 0;
   pointer-events: none;
 }
-/* Ensure logo stays above text */
-#banner .hero-title-wrap {
-  position: relative;
-  /* z-index: 50; */
-}
-
-/* Text stays below and scrolls naturally */
-#banner .hero-sub {
-  position: relative;
-  z-index: 1;
+#banner.hide-text .hero-sub {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
 }
 #banner.learn-more-hide .more {
   opacity: 0;
@@ -485,17 +480,17 @@ a.more.scrolly:hover {
   position: relative;
 
   transition:
-    transform 0.3s,
+    transform .3s,
     opacity 0.3s ease;
 }
 
 /* MOVE BUTTON BESIDE LOGO */
 #banner.move-btn .hero-actions {
   position: fixed;
-  /* top: 142px;
+  top: 142px;
   right: 12%;
   transform: translateX(20%);
-  z-index: 30; */
+  z-index: 30;
 }
 /* } */
 /* @media screen and (min-width: 1024px) and (max-width: 1199px) { */
@@ -604,26 +599,16 @@ a.more.scrolly:hover {
   }
 }
 
+
 @media (max-width: 1024px) {
-  #banner {
-    background-size: 100%;
-  }
+    #banner{
+        background-size: 100%;
+    }
 }
 @media (max-width: 768px) {
-  #banner {
-    background-size: 150%;
-  }
-}
-/* FINAL SHRINK + TRAVEL */
-#banner.shrink-to-login .hero-actions {
-  position: fixed;
-  z-index: 999;
-  transition:
-    transform 0.6s ease-in-out,
-    opacity 0.4s ease-in-out;
-}
-#banner.shrink-to-login .button.primary.large {
-  transform: scale(0.5);
+    #banner{
+        background-size: 150%;
+    }
 }
 
 /* ─────────────────────────────────────────────
@@ -656,7 +641,12 @@ header.major p {
 .wrapper.style1 {
   /* background: #21b2a6; */
   /* background: #af870f; */
-  background: linear-gradient(to bottom, #d18f1a 0%, #e7af27 50%, #f0be2d 100%);
+  background: linear-gradient(
+    to bottom,
+    #D18F1A 0%,
+    #E7AF27 50%,
+    #F0BE2D 100%
+  );
   color: #fff;
 }
 .wrapper.style1 header.major h2 {
