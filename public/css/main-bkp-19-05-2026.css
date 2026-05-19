@@ -91,12 +91,6 @@ img {
 .d-none {
   display: none !important;
 }
-.mt-0 {
-  margin-top: 0 !important;
-}
-.mb-0 {
-  margin-bottom: 0 !important;
-}
 /* ─────────────────────────────────────────────
    LAYOUT
 ───────────────────────────────────────────── */
@@ -631,15 +625,7 @@ a.more.scrolly:hover {
 #banner.shrink-to-login .button.primary.large {
   transform: scale(0.5);
 }
-/* Each subheader fades individually */
-#banner .hero-sub {
-  transition: opacity 0.3s ease-out;
-}
 
-#banner .hero-sub.hidden-by-logo {
-  opacity: 0;
-  pointer-events: none;
-}
 /* ─────────────────────────────────────────────
    WRAPPERS (shared)
 ───────────────────────────────────────────── */

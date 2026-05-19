@@ -95,8 +95,10 @@
               </h2>
             </div>
 
-            <p class="hero-sub mb-0">Your HR needs are standing in your way.</p>
-            <p class="hero-sub mt-0">Don't just manage the issues.</p>
+            <p class="hero-sub">
+              Your HR needs are standing in your way.<br />
+              Don't just manage the issues.
+            </p>
             <p class="hero-sub">
               <em>Break through &amp; thrive.</em>
             </p>
@@ -821,7 +823,6 @@
         const heroTitle = document.querySelector("#banner .hero-title-wrap");
         const heroButton = document.querySelector("#banner .hero-actions li");
         const learnMore = document.querySelector("#banner .more");
-        const heroSubs = document.querySelectorAll("#banner .hero-sub");
 
         /* ─────────────────────────────
      CONFIG
@@ -876,22 +877,6 @@
         const getRect = (el) => {
           const r = el.getBoundingClientRect();
           return { top: r.top, left: r.left, width: r.width, height: r.height };
-        };
-
-        /* ─────────────────────────────
-   HIDE SUBHEADERS INDIVIDUALLY
-───────────────────────────── */
-        const updateSubLines = (logoBottom) => {
-          heroSubs.forEach((line) => {
-            const lineRect = line.getBoundingClientRect();
-            const lineCenter = lineRect.top + lineRect.height / 2;
-
-            if (lineCenter <= logoBottom) {
-              line.classList.add("hidden-by-logo");
-            } else {
-              line.classList.remove("hidden-by-logo");
-            }
-          });
         };
 
         const getTargetRight = () =>
@@ -1081,8 +1066,6 @@
         const handleScroll = () => {
           const scrollY = window.scrollY;
           const logoRect = heroTitle.getBoundingClientRect();
-
-          updateSubLines(logoRect.bottom);
 
           storeNaturalRect();
 
